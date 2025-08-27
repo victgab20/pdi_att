@@ -1,13 +1,18 @@
 import matplotlib.pyplot as plt
-from skimage import data, color, exposure, img_as_float
+import numpy as np
+from skimage import data, color, img_as_float
 
 img_rgb  = img_as_float(data.astronaut())
 img_gray = color.rgb2gray(img_rgb)
 
-g1 = exposure.adjust_gamma(img_gray, gamma=0.5)
-g2 = exposure.adjust_gamma(img_gray, gamma=0.8)
-g3 = exposure.adjust_gamma(img_gray, gamma=1.5)
-g4 = exposure.adjust_gamma(img_gray, gamma=2.5)
+def adjust_gamma_manual(x, gamma, gain=1.0):
+    x = np.clip(x, 0.0, 1.0)
+    return np.clip(gain * np.power(x, gamma), 0.0, 1.0)
+
+g1 = adjust_gamma_manual(img_gray, 0.5)
+g2 = adjust_gamma_manual(img_gray, 0.8)
+g3 = adjust_gamma_manual(img_gray, 1.5)
+g4 = adjust_gamma_manual(img_gray, 2.5)
 
 fig, axes = plt.subplots(1,5, figsize=(15,5))
 titles = ["Original","γ=0.5","γ=0.8","γ=1.5","γ=2.5"]
